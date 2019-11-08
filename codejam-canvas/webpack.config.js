@@ -39,15 +39,15 @@ module.exports = {
                     'sass-loader',
                 ],
             },
-/*             {
+/*              {
                 test: /\.svg$/, 
                 loader: 'svg-sprite-loader',
                 options: {
                   extract: true,
                   spriteFilename: './assets/icons/icons.svg', 
                 }
-            }, */
-/*             {
+            },  */
+/*              {
                 test: /\.svg$/, 
                 use: [{
                     loader: "file-loader",
@@ -57,7 +57,7 @@ module.exports = {
                     }
                 }]
 
-            },  */
+            },   */
             {
                 test: /\.(woff|woff2|ttf|otf|eot)$/i,
                 use: [{
@@ -69,15 +69,27 @@ module.exports = {
                 }]
             },
             {
-                test: /\.(png|jpe?g|gif)$/i,
+                test: /\.(png|jpe?g|gif|json)$/i,
+                include:  path.resolve(__dirname, 'src/data'),
                 use: [{
                     loader: "file-loader",
                     options: {
-                        outputPath: "assets/img",
+                        outputPath: "data",
                         name: '[name].[ext]',
                     }
                 }]
             },
+/*             {
+                test: /\.(png|jpe?g|gif|json)$/i,
+                include:  path.resolve(__dirname, 'src/data'),
+                use: [{
+                    loader: "file-loader?name=[name].[ext]",
+                    options: {
+                        outputPath: "data",
+                        name: '[name].[ext]',
+                    }
+                }]
+            }, */
 
         ]
     },

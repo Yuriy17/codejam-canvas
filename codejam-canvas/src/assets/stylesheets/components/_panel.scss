@@ -5,5 +5,14 @@
     padding: 10%;
     font-size: 1.6rem;
     box-shadow: 2px 3px 10px 0px gray;
+    a{
+        display: inline-flex;
+        align-items: center;
+        min-width: 204px;
+        color: rgba(0, 0, 0, 0.541327);
+        &:hover{
+            color: rgba(0, 0, 0, 0.741327);
+        }
+    }
 
 }

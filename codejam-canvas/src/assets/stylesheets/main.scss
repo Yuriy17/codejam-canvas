@@ -14,12 +14,13 @@
   'base/typography',
   'base/helpers';
 
-@import
+  @import
+  'components/button',
+  'components/panel';
+
+  @import
   'layout/header',
   'layout/content';
 
-@import
-  'components/button',
-  'components/panel';
 
 

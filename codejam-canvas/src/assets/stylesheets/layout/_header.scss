@@ -7,10 +7,20 @@
     box-shadow: 0 4px 2px -2px gray;
     display: flex;
     align-items: center;
+/*     z-index: 18;
+    background: white; */
 
     // .header--title
 
     &--title {
         font-size: 2rem;
+        display: flex;
+        height: 100%;
+        align-items: center;
+    }
+
+    &--title_icon {
+        width: 48px;
+        height: 48px;
     }
 }
