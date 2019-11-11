@@ -1,69 +1,96 @@
-window.addEventListener('load', function () {
- 
-    document.querySelector('.switch-png').addEventListener('change', onChange_png);
-    document.querySelector('.switch-4x4').addEventListener('change', onChange_4x4);
-    document.querySelector('.switch-32x32').addEventListener('change', onChange_32x32);
-    document.querySelector('.switch-4x4').dispatchEvent(new Event('change'));
-});
+import canvas4x4 from '../../data/4x4';
+import canvas32x32 from '../../data/32x32';
+/* import picture from '../../data/image.png' */
+const jsdom = require('jsdom');
 
+const { JSDOM } = jsdom;
 
-let canvas = document.getElementById('canvas');
-let ctx = canvas.getContext("2d");
+class Canvas {
+  static _dom;
 
-function onChange_png() {
-    const img = new Image();
-    img.onload = function () {
-        canvas.width = 256;
-        canvas.height = 256;
-        ctx.drawImage(img, 0, 0);
-    }
-    img.src = './data/image.png';
-};
+  static _canvas = this.dom.window.document.getElementById('canvas');
 
+  static _ctx = this.canvas.getContext('2d');
 
-async function getArr(url) {
-    try {
-        const arr = await fetch(url);
-        return arr;
-    } catch (err) {
-        console.log(err);
-    }
-}
+  static _concat = (xs, ys) => xs.concat(ys);
 
-const concat = (xs, ys) => xs.concat(ys);
-const hexToRGBA = hexStr => [
+  static _hexToRGBA = (hexStr) => [
     parseInt(hexStr.substr(0, 2), 16),
     parseInt(hexStr.substr(2, 2), 16),
     parseInt(hexStr.substr(4, 2), 16),
-    255
-];
+    255,
+  ];
 
-function onChange_4x4() {
-    getArr('./data/4x4.json')
-        .then(response => response.json())
-        .then(json => {
-            draw(json);
-        });
-
-    let draw = function (arr) {
-        const flattenedRGBAValues = arr.reduce(concat).map(hexToRGBA).reduce(concat);
-        canvas.width = canvas.height = 4;
-        const imgData = new ImageData(Uint8ClampedArray.from(flattenedRGBAValues), 4, 4);
-        ctx.putImageData(imgData, 0, 0);
+  /*   static async getArr(url) {
+    try {
+      const arr = await fetch(url);
+      return arr;
+    } catch (err) {
+      console.log(err);
     }
+  } */
+
+  static async initial() {
+    this.dom = await JSDOM.fromFile('../../index.html', {
+      resources: 'usable',
+      runScripts: 'dangerously',
+    });
+
+    const switchPanel = this.dom.window.document
+      .querySelector('.switch_panel');
+
+    /*     switchPanel
+      .querySelector('.switchPng')
+      .addEventListener('change', this.onChangePng); */
+    switchPanel
+      .querySelector('.switch4x4')
+      .addEventListener('change', this.onChange4x4);
+    switchPanel
+      .querySelector('.switch32x32')
+      .addEventListener('change', this.onChange32x32);
+    switchPanel.querySelector('.switch4x4')
+      .dispatchEvent(new this.dom.window.Event('change'));
+  }
+
+  /*   static onChangePng = () => {
+    const img = new this.dom.window.Image();
+    img.onload = () => {
+      this.canvas.width = 256;
+      this.canvas.height = 256;
+      this.ctx.drawImage(img, 0, 0);
+    };
+    img.src = './data/image.png';
+  }; */
+
+  static onChange4x4 = () => {
+    const flattenedRGBAValues = canvas4x4
+      .reduce(this.canvas)
+      .map(this.hexToRGBA)
+      .reduce(this.canvas);
+    [this.canvas.width, this.canvas.height] = [4, 4];
+    const imgData = new this.dom.window.ImageData(
+      Uint8ClampedArray.from(flattenedRGBAValues),
+      4,
+      4,
+    );
+    this.ctx.putImageData(imgData, 0, 0);
+  };
+
+  static onChange32x32 = () => {
+    const flattenedRGBAValues = canvas32x32
+      .reduce(this.canvas).reduce(this.canvas);
+    [this.canvas.width, this.canvas.height] = [32, 32];
+    const imgData = new this.dom.window.ImageData(
+      Uint8ClampedArray.from(flattenedRGBAValues),
+      32,
+      32,
+    );
+    this.ctx.putImageData(imgData, 0, 0);
+  };
 }
 
-function onChange_32x32() {
-    getArr('./data/32x32.json')
-        .then(response => response.json())
-        .then(json => {
-            draw(json);
-        });
+export default {
+  Canvas,
+};
 
-    let draw = function (arr) {
-        const flattenedRGBAValues = arr.reduce(concat).reduce(concat);
-        canvas.width = canvas.height = 32;
-        const imgData = new ImageData(Uint8ClampedArray.from(flattenedRGBAValues), 32, 32);
-        ctx.putImageData(imgData, 0, 0);
-    }
-}
+/* export default 'Canvas'; */
